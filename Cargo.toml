@@ -1,0 +1,13 @@
+[package]
+name = "translator-cli"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json", "cookies"] }
+tokio = { version = "1.16.1", features = ["full"] }
+dotenv = "0.15.0"
+clap = { version = "3.0", features = ["derive"] }
+serde = { version = "1.0" }
