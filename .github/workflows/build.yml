@@ -72,7 +72,9 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --target ${{ matrix.target }}
+          args: --release --verbose --target ${{ matrix.target }}
+      - name: List target
+        run: find ./target
       - name: Compress
         run: |
           mkdir -p ./artifacts
