@@ -46,7 +46,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.target }}
     env:
-      NAME: translator
+      NAME: translator-cli
       TARGET: ${{ matrix.target }}
       OS: ${{ matrix.os }}
     steps:
