@@ -9,9 +9,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
     steps:
       - uses: actions/checkout@v2
       - name: Cargo cache
@@ -19,18 +16,35 @@ jobs:
         with:
           path: |
             ~/.cargo/registry
-            ./translator-cli/target
+            ./target
           key: test-cargo-registry
       - uses: actions-rs/cargo@v1
         with:
           command: test
           args: --verbose
-  x86_64-unknown-linux-gnu:
-    name: x86_64-unknown-linux-gnu
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
+  build:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+          - target: arm-unknown-linux-gnueabihf
+            os: ubuntu-latest
+          - target: arm-unknown-linux-musleabihf
+            os: ubuntu-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+    needs: test
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -43,204 +57,24 @@ jobs:
         with:
           path: |
             ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-x86_64-unknown-linux-gnu
+            ./target
+          key: build-cargo-registry-${{ matrix.target }}
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: --target x86_64-unknown-linux-gnu
-  x86_64-unknown-linux-musl:
-    name: x86_64-unknown-linux-musl
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-musl
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-x86_64-unknown-linux-musl
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target x86_64-unknown-linux-musl
-
-  aarch64-unknown-linux-gnu:
-    name: aarch64-unknown-linux-gnu
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-unknown-linux-gnu
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-aarch64-unknown-linux-gnu
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target aarch64-unknown-linux-gnu
-
-  aarch64-unknown-linux-musl:
-    name: aarch64-unknown-linux-musl
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-unknown-linux-musl
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-aarch64-unknown-linux-musl
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target aarch64-unknown-linux-musl
-
-  arm-unknown-linux-gnueabihf:
-    name: arm-unknown-linux-gnueabihf
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: arm-unknown-linux-gnueabihf
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-arm-unknown-linux-gnueabihf
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target arm-unknown-linux-gnueabihf
-
-  arm-unknown-linux-musleabihf:
-    name: arm-unknown-linux-musleabihf
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: arm-unknown-linux-musleabihf
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-registry-arm-unknown-linux-musleabihf
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target arm-unknown-linux-musleabihf
-
-  x86_64-apple-darwin:
-    name: x86_64-apple-darwin
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-apple-darwin
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-reg-x86_64-apple-darwinistry
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target x86_64-apple-darwin
-
-  x86_64-pc-windows-gnu:
-    name: x86_64-pc-windows-gnu
-    runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ./translator-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-pc-windows-gnu
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ./translator-cli/target
-          key: build-cargo-regis-x86_64-pc-windows-gnu
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target x86_64-pc-windows-gnu
+          args: --target ${{ matrix.target }}
 
   prepare:
-    name: others
+    name: prepare
     runs-on: ubuntu-latest
+    needs: build
     defaults:
       run:
         working-directory: ./translator-cli
     steps:
       - name: List target
-        run: find ./translator-cli/target
+        run: find ./target
       - name: Compress
         run: |
           mkdir -p ./artifacts
@@ -254,7 +88,7 @@ jobs:
           else
             TAG=$GITHUB_SHA
           fi
-          mv ./translator-cli/target/$TARGET/release/$EXEC ./$EXEC
+          mv ./target/$TARGET/release/$EXEC ./$EXEC
           tar -czf ./artifacts/$NAME-$TARGET-$TAG.tar.gz $EXEC
       - name: Upload artifact
         uses: actions/upload-artifact@v2
