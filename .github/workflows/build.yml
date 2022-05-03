@@ -76,9 +76,6 @@ jobs:
     name: prepare
     runs-on: ubuntu-latest
     needs: build
-    defaults:
-      run:
-        working-directory: ./translator-cli
     steps:
       - name: List target
         run: find ./target
@@ -108,9 +105,6 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: prepare
-    defaults:
-      run:
-        working-directory: ./translator-cli
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
