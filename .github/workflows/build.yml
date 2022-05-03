@@ -46,6 +46,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.target }}
     env:
+      NAME: translator
+      TARGET: ${{ matrix.target }}
       OS: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
