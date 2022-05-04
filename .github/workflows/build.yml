@@ -75,9 +75,9 @@ jobs:
             mkdir \Tools
             cd \Tools
             git clone https://github.com/Microsoft/vcpkg.git
-            ls .\vcpkg
-            .\vcpkg\bootstrap-vcpkg.bat
-            .\vcpkg\vcpkg install  install openssl:x64-windows-static
+            ls vcpkg
+            vcpkg\bootstrap-vcpkg.bat
+            vcpkg\vcpkg install install openssl:x64-windows-static
 
             OPENSSL_DIR = 'C:\Tools\vcpkg\installed\x64-windows-static'
             OPENSSL_STATIC = 'Yes'
