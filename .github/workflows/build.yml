@@ -38,8 +38,8 @@ jobs:
           #   os: ubuntu-latest
           # - target: arm-unknown-linux-musleabihf
           #   os: ubuntu-latest
-          # - target: x86_64-apple-darwin
-          #   os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
           # - target: x86_64-pc-windows-gnu
           #   os: windows-latest
     needs: test
