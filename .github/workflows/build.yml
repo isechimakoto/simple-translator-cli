@@ -40,7 +40,7 @@ jobs:
           #   os: ubuntu-latest
           - target: x86_64-apple-darwin
             os: macos-latest
-          - target: x86_64-pc-windows-gnu
+          - target: i686-pc-windows-gnu
             os: windows-latest
     needs: test
     runs-on: ${{ matrix.os }}
