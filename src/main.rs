@@ -36,7 +36,9 @@ async fn main() -> io::Result<()>{
     f.read_to_string(&mut buffer)?;
 
     dotenv().ok();
-    let translate_api_id = env::var("TRANSLATE_API_ID").unwrap();
+    let translate_api_id = env::var("TRANSLATE_API_ID").unwrap_or_else(|error| {
+         panic!(" {:?}: It needs TRANSLATE_API_ID in .env file", error.to_string());
+    });
 
     let client = reqwest::Client::new();
     let params = [
