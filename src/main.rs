@@ -1,4 +1,4 @@
-use std::{env, io::{Read, self, Write, Error, ErrorKind}, fs::File};
+use std::{env, io::{Read, self, Write}, fs::File};
 
 use clap::Parser;
 use dotenv::dotenv;
@@ -67,11 +67,12 @@ async fn main() -> io::Result<()>{
         }
     };
 
-    match &translated.sentences[0].trans {
-        Some(trans) => {
-            tf.write_fmt(format_args!("{}", trans)).unwrap();
-            Ok(())
-        },
-        _ => Err(Error::new(ErrorKind::Other, "Not found translated text")),
+    for sentense in translated.sentences.into_iter() {
+        match sentense.trans {
+            Some(trans) => tf.write_fmt(format_args!("{}", trans)).unwrap(),
+            None => tf.write_fmt(format_args!("")).unwrap(),
+        };
     }
+
+    Ok(())
 }
